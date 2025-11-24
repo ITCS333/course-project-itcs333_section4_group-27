@@ -34,12 +34,12 @@ const assignmentsTableBody = document.querySelector('#assignments-tbody');
  * - An "Edit" button with class "edit-btn" and `data-id="${id}"`.
  * - A "Delete" button with class "delete-btn" and `data-id="${id}"`.
  */
-function createAssignmentRow(assignment) {
-  const { id, title, dueDate } = assignment;
-
+ function createAssignmentRow ( assignment){
+  const {id, title, dueDate } = assignment ; 
+ 
   // Create the table row
-  const tr = document.createElement('tr');
-
+   const tr = document.createElement('tr');
+  
   // Title cell
   const titleTd = document.createElement('td');
   titleTd.textContent = title;
