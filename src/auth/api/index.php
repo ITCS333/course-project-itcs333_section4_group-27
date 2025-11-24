@@ -11,6 +11,7 @@
 // TODO: Start a PHP session using session_start()
 // This must be called before any output is sent to the browser
 // Sessions allow us to store user data across multiple pages
+
 session_start();
 
 // --- Set Response Headers ---

@@ -1,3 +1,12 @@
+
+  <?php
+session_start();
+
+if (empty($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    header("Location: login.html");
+    exit;
+}
+?>
 <!--
   Requirement: Create a Responsive Admin Portal
 
@@ -30,7 +39,12 @@
     <!-- TODO: Create a 'header' element for the top of the page. -->
     <header>
         <!-- TODO: Inside the header, add a main heading (e.g., 'h1') with the text "Admin Portal". -->
+         
         <h1>Admin Portal</h1>
+    <form action="logout.php" method="post" style="display: inline;">
+        <button type="submit">Logout</button>
+    </form>
+
     </header>
     <!-- End of the header. -->
 
