@@ -1,24 +1,26 @@
 <!--
   Requirement: Create the Page for a Single Discussion Topic
+
   Instructions:
   This page displays the original post of a topic, all its replies, and a form to add a new reply.
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta tags for character encoding and responsive design -->
+    <!-- Meta tags for charset and viewport. -->
     <meta charset="UTF-8"> <!-- UTF-8 encoding -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsive viewport -->
 
-    <title>Topic Details</title> <!-- Page title -->
+    <!-- Page title -->
+    <title>Topic Details</title>
 
-    <!-- Link to CSS framework or custom stylesheet -->
-    <!-- Example: <link rel="stylesheet" href="styles.css"> -->
+    <!-- Link to CSS framework or stylesheet -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Header section -->
+    <!-- Header with main heading -->
     <header>
-        <h1>Question about CSS Flexbox</h1> <!-- Dummy topic title -->
+        <h1 id="topic-subject">Question about CSS Flexbox</h1> <!-- Dummy topic title -->
     </header>
 
     <!-- Main content area -->
@@ -26,12 +28,12 @@
         <!-- Section 1: Original Post -->
         <section>
             <article id="original-post">
-                <p>I can't get my items to space out evenly. I'm using <code>display: flex</code> but they are all bunched up. What am I missing?</p>
-                <footer>
+                <p id="op-message">I can't get my items to space out evenly. I'm using <code>display: flex</code> but they are all bunched up. What am I missing?</p>
+                <footer id="op-footer">
                     Posted by: Student Name on 2025-10-25
                 </footer>
                 <div class="actions">
-                    <!-- Action buttons (Edit/Delete) for the topic owner or admin -->
+                    <!-- Action buttons for topic owner/admin -->
                     <button class="edit-btn">Edit</button>
                     <button class="delete-btn">Delete</button>
                 </div>
@@ -41,28 +43,24 @@
         <!-- Section 2: Replies -->
         <section id="replies-section">
             <h2>Replies</h2>
-            <div id="replies-container">
+            <div id="reply-list-container">
                 <!-- Example Reply 1 -->
                 <article class="reply">
                     <p>Have you tried using <code>justify-content: space-between</code> on the flex container?</p>
-                    <footer>
-                        Posted by: Khalid on 2025-10-25
-                    </footer>
+                    <footer>Posted by: Khalid on 2025-10-25</footer>
                     <div class="actions">
                         <button class="edit-btn">Edit</button>
-                        <button class="delete-btn">Delete</button>
+                        <button class="delete-reply-btn" data-id="reply_1">Delete</button>
                     </div>
                 </article>
 
                 <!-- Example Reply 2 -->
                 <article class="reply">
                     <p>That was it, thanks!</p>
-                    <footer>
-                        Posted by: Aysha on 2025-10-25
-                    </footer>
+                    <footer>Posted by: Aysha on 2025-10-25</footer>
                     <div class="actions">
                         <button class="edit-btn">Edit</button>
-                        <button class="delete-btn">Delete</button>
+                        <button class="delete-reply-btn" data-id="reply_2">Delete</button>
                     </div>
                 </article>
             </div>
@@ -71,7 +69,7 @@
         <!-- Section 3: Add a Reply Form -->
         <section>
             <h2>Post a Reply</h2>
-            <form id="new-reply-form" action="#">
+            <form id="reply-form" action="#">
                 <fieldset>
                     <legend>Your Reply</legend>
                     <label for="new-reply">Message:</label>
