@@ -175,7 +175,7 @@ function handleTopicListClick(event) {
 */
 async function loadAndInitialize() {
   try {
-    const response = await fetch('topics.json');
+    const response = await fetch('api/topics.json');
     if (!response.ok) {
       throw new Error('Failed to load topics.json');
     }
