@@ -222,9 +222,10 @@ async function initializePage() {
 
   try {
     const [topicsRes, repliesRes] = await Promise.all([
-      fetch('topics.json'),
-      fetch('comments.json'),
-    ]);
+  fetch('api/topics.json'),
+  fetch('api/comments.json'),
+]);
+
 
     if (!topicsRes.ok || !repliesRes.ok) {
       throw new Error('Failed to load JSON data');
