@@ -19,7 +19,7 @@
 <body>
     <!-- TODO: Create a 'header' with a main heading ('h1'). Use a dummy title like "Question about CSS Flexbox". -->
     <header class="container">
-        <h1>Question about CSS Flexbox</h1>
+        <h1 id="topic-subject">Question about CSS Flexbox</h1>
     </header>
 
     <!-- TODO: Create the 'main' content area. -->
@@ -30,14 +30,14 @@
         <section>
             <article id="original-post">
                 <!-- TODO: Add a paragraph ('p') with the dummy text of the original message. -->
-                <p>
+                <p id="op-message">
                     I am trying to center items inside a flex container, but they keep sticking to the left side.
                     I used <code>display: flex;</code> on the parent, but I am not sure which properties I should use
                     to space the items horizontally and vertically.
                 </p>
 
                 <!-- TODO: Use a 'footer' for the metadata: "Posted by: Student Name on YYYY-MM-DD". -->
-                <footer>
+                <footer id="op-footer">
                     Posted by: Student A on 2025-11-20
                 </footer>
 
@@ -58,7 +58,7 @@
             <h2>Replies</h2>
 
             <!-- TODO: Add a container (like a 'div') for the list of replies. -->
-            <div id="replies-list">
+            <div id="reply-list-container">
 
                 <!-- TODO: Add 1-2 dummy replies to show the structure. -->
 
@@ -112,7 +112,7 @@
 
             <!-- TODO: Create a 'form' for users to post new replies. Action can be '#'. -->
             <!-- TODO: Use a 'fieldset' to group the controls. -->
-            <form action="#" method="post">
+            <form id="reply-form" action="#" method="post">
                 <fieldset>
                     <!-- TODO: Add a 'legend', e.g., "Your Reply". -->
                     <legend>Your Reply</legend>
@@ -143,5 +143,7 @@
         <!-- End of replies section. -->
         <!-- End of main. -->
     </main>
+
+    <script src="topic.js" defer></script>
 </body>
 </html>
