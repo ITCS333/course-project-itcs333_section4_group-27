@@ -124,7 +124,7 @@ function handleCreateTopic(event) {
   const message = messageInput.value.trim();
 
   if (subject === '' || message === '') {
-    // simple validation, ما نعرض error في الـ UI عشان نخلّيها بسيطة
+// Simple validation: we do not show an error in the UI to keep it basic
     return;
   }
 
@@ -181,7 +181,7 @@ async function loadAndInitialize() {
     }
 
     const data = await response.json();
-    // نتوقع أن data عبارة عن array من التوبيكس
+// We expect the data to be an array of topics
     topics = Array.isArray(data) ? data : [];
   } catch (error) {
     console.error('Error loading topics:', error);
