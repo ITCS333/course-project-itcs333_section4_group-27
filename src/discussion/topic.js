@@ -223,7 +223,7 @@ async function initializePage() {
   try {
     const [topicsRes, repliesRes] = await Promise.all([
       fetch('topics.json'),
-      fetch('replies.json'),
+      fetch('comments.json'),
     ]);
 
     if (!topicsRes.ok || !repliesRes.ok) {
