@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // TODO: Include the database connection class
 // Assume the Database class has a method getConnection() that returns a PDO instance
-// (هنا نستخدم دالة getDBConnection الموجودة في مشروع الأوث)
+// Here we include the authentication project's database connection (getDBConnection)
 require_once __DIR__ . '/../../auth/api/db.php';
 
 // TODO: Get the PDO database connection
