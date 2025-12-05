@@ -25,5 +25,4 @@ Task Number	Task Description	Assigned Student
 
 Live Hosted Application
 Access the live version of our Course Page application here:
-
-🔗 Replit Link: [https://replit.com/@yourprojectlink](https://replit.com/@maryamalmuqahwi/ITCS333-Course-Project?v=1)
+Replit Link: [https://replit.com/@yourprojectlink](https://replit.com/@maryamalmuqahwi/ITCS333-Course-Project?v=1)
