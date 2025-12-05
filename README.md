@@ -6,12 +6,13 @@ Team Members
 
 List of all team members participating in the project:
 
-Name	            Student ID
-Maryam Mohamed	  [202100628]
-Lubna Feras	      [202104936]
-Noor Taha        	[202109013]
-Amina Mohamed	    [202202419]
-Nada Abdulaziz	  [202203864]
+| Name            | Student ID  |
+|-----------------|-------------|
+| Maryam Mohamed  | 202100628   |
+| Lubna Feras     | 202104936   |
+| Noor Taha       | 202109013   |
+| Amina Mohamed   | 202202419   |
+| Nada Abdulaziz  | 202203864   |
 
 Task Distribution
 The table below indicates which student completed each assigned task for the Course Page project:
