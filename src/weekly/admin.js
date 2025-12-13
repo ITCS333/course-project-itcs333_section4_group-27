@@ -1,98 +1,327 @@
-/*
-  Requirement: Make the "Manage Weekly Breakdown" page interactive.
+// admin.js
 
-  Instructions:
-  1. Link this file to `admin.html` using:
-     <script src="admin.js" defer></script>
-  
-  2. In `admin.html`, add an `id="weeks-tbody"` to the <tbody> element
-     inside your `weeks-table`.
-  
-  3. Implement the TODOs below.
-*/
+const API_BASE = '/api/weeks.php';
 
-// --- Global Data Store ---
-// This will hold the weekly data loaded from the JSON file.
 let weeks = [];
 
-// --- Element Selections ---
-// TODO: Select the week form ('#week-form').
+// Element selections
 
-// TODO: Select the weeks table body ('#weeks-tbody').
+const weekForm = document.querySelector('#week-form');
 
-// --- Functions ---
+const weekIdInput = document.querySelector('#week-id');
 
-/**
- * TODO: Implement the createWeekRow function.
- * It takes one week object {id, title, description}.
- * It should return a <tr> element with the following <td>s:
- * 1. A <td> for the `title`.
- * 2. A <td> for the `description`.
- * 3. A <td> containing two buttons:
- * - An "Edit" button with class "edit-btn" and `data-id="${id}"`.
- * - A "Delete" button with class "delete-btn" and `data-id="${id}"`.
- */
+const titleInput = document.querySelector('#week-title');
+
+const startDateInput = document.querySelector('#week-start-date');
+
+const descriptionInput = document.querySelector('#week-description');
+
+const linksInput = document.querySelector('#week-links');
+
+const weeksTbody = document.querySelector('#weeks-tbody');
+
+const resetBtn = document.querySelector('#reset-form');
+
+function escapeHtml(s) {
+
+  if (s === null || s === undefined) return '';
+
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+}
+
 function createWeekRow(week) {
-  // ... your implementation here ...
+
+  const tr = document.createElement('tr');
+
+  tr.innerHTML = `
+<td>${escapeHtml(week.title)}</td>
+<td>${escapeHtml(week.startDate || week.start_date || '')}</td>
+<td>${escapeHtml(week.description || '').slice(0, 120)}</td>
+<td>
+<button class="btn btn-sm btn-outline-primary edit-btn" data-id="${escapeHtml(week.id || week.week_id)}">Edit</button>
+<button class="btn btn-sm btn-outline-danger delete-btn ms-2" data-id="${escapeHtml(week.id || week.week_id)}">Delete</button>
+</td>
+
+  `;
+
+  return tr;
+
 }
 
-/**
- * TODO: Implement the renderTable function.
- * It should:
- * 1. Clear the `weeksTableBody`.
- * 2. Loop through the global `weeks` array.
- * 3. For each week, call `createWeekRow()`, and
- * append the resulting <tr> to `weeksTableBody`.
- */
 function renderTable() {
-  // ... your implementation here ...
+
+  weeksTbody.innerHTML = '';
+
+  if (!weeks || weeks.length === 0) {
+
+    weeksTbody.innerHTML = `<tr><td colspan="4" class="text-muted">No weeks found.</td></tr>`;
+
+    return;
+
+  }
+
+  weeks.forEach(w => {
+
+    if (!w.id && w.week_id) w.id = w.week_id;
+
+    weeksTbody.appendChild(createWeekRow(w));
+
+  });
+
 }
 
-/**
- * TODO: Implement the handleAddWeek function.
- * This is the event handler for the form's 'submit' event.
- * It should:
- * 1. Prevent the form's default submission.
- * 2. Get the values from the title, start date, and description inputs.
- * 3. Get the value from the 'week-links' textarea. Split this value
- * by newlines (`\n`) to create an array of link strings.
- * 4. Create a new week object with a unique ID (e.g., `id: \`week_${Date.now()}\``).
- * 5. Add this new week object to the global `weeks` array (in-memory only).
- * 6. Call `renderTable()` to refresh the list.
- * 7. Reset the form.
- */
-function handleAddWeek(event) {
-  // ... your implementation here ...
+function resetForm() {
+
+  weekIdInput.value = '';
+
+  titleInput.value = '';
+
+  startDateInput.value = '';
+
+  descriptionInput.value = '';
+
+  linksInput.value = '';
+
+  document.querySelector('#add-week').textContent = 'Save Week';
+
 }
 
-/**
- * TODO: Implement the handleTableClick function.
- * This is an event listener on the `weeksTableBody` (for delegation).
- * It should:
- * 1. Check if the clicked element (`event.target`) has the class "delete-btn".
- * 2. If it does, get the `data-id` attribute from the button.
- * 3. Update the global `weeks` array by filtering out the week
- * with the matching ID (in-memory only).
- * 4. Call `renderTable()` to refresh the list.
- */
-function handleTableClick(event) {
-  // ... your implementation here ...
+async function handleAddWeek(e) {
+
+  e.preventDefault();
+
+  const id = weekIdInput.value || null;
+
+  const title = titleInput.value.trim();
+
+  const startDate = startDateInput.value;
+
+  const description = descriptionInput.value.trim();
+
+  const links = linksInput.value.split('\n').map(s => s.trim()).filter(Boolean);
+
+  if (!title || !startDate) {
+
+    alert('Title and start date are required.');
+
+    return;
+
+  }
+
+  // Build payload
+
+  // If id present -> update (PUT); otherwise create (POST)
+
+  try {
+
+    if (!id) {
+
+      // create week_id client-side to keep uniqueness in-memory (server may overwrite)
+
+      const newWeekId = `week_${Date.now()}`;
+
+      const payload = {
+
+        week_id: newWeekId,
+
+        title,
+
+        start_date: startDate,
+
+        description,
+
+        links
+
+      };
+
+      const res = await fetch(API_BASE, {
+
+        method: 'POST',
+
+        headers: { 'Content-Type': 'application/json' },
+
+        body: JSON.stringify(payload)
+
+      });
+
+      const json = await res.json();
+
+      if (!res.ok || !json.success) throw new Error(json.message || 'Failed to create week');
+
+      // reflect created week (server may return created data; if not, add approximated)
+
+      const created = {
+
+        id: payload.week_id,
+
+        week_id: payload.week_id,
+
+        title: payload.title,
+
+        startDate: payload.start_date,
+
+        description: payload.description,
+
+        links: payload.links
+
+      };
+
+      weeks.push(created);
+
+    } else {
+
+      // update
+
+      const payload = {
+
+        week_id: id,
+
+        title,
+
+        start_date: startDate,
+
+        description,
+
+        links
+
+      };
+
+      const res = await fetch(API_BASE, {
+
+        method: 'PUT',
+
+        headers: { 'Content-Type': 'application/json' },
+
+        body: JSON.stringify(payload)
+
+      });
+
+      const json = await res.json();
+
+      if (!res.ok || !json.success) throw new Error(json.message || 'Failed to update week');
+
+      // update local array
+
+      weeks = weeks.map(w => ( (w.id === id || w.week_id === id) ? { ...w, title, startDate: startDate, description, links } : w ));
+
+    }
+
+    renderTable();
+
+    resetForm();
+
+  } catch (err) {
+
+    alert('Error saving week: ' + err.message);
+
+    console.error(err);
+
+  }
+
 }
 
-/**
- * TODO: Implement the loadAndInitialize function.
- * This function needs to be 'async'.
- * It should:
- * 1. Use `fetch()` to get data from 'weeks.json'.
- * 2. Parse the JSON response and store the result in the global `weeks` array.
- * 3. Call `renderTable()` to populate the table for the first time.
- * 4. Add the 'submit' event listener to `weekForm` (calls `handleAddWeek`).
- * 5. Add the 'click' event listener to `weeksTableBody` (calls `handleTableClick`).
- */
+async function handleTableClick(e) {
+
+  const btn = e.target.closest('button');
+
+  if (!btn) return;
+
+  if (btn.classList.contains('delete-btn')) {
+
+    const id = btn.dataset.id;
+
+    if (!confirm('Delete this week and its comments?')) return;
+
+    try {
+
+      const res = await fetch(`${API_BASE}?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+
+      const json = await res.json();
+
+      if (!res.ok || !json.success) throw new Error(json.message || 'Failed to delete');
+
+      // remove locally
+
+      weeks = weeks.filter(w => (w.id !== id && w.week_id !== id));
+
+      renderTable();
+
+    } catch (err) {
+
+      alert('Error deleting week: ' + err.message);
+
+    }
+
+  } else if (btn.classList.contains('edit-btn')) {
+
+    const id = btn.dataset.id;
+
+    const week = weeks.find(w => (w.id === id || w.week_id === id));
+
+    if (!week) return;
+
+    // populate form for editing
+
+    weekIdInput.value = week.id || week.week_id || '';
+
+    titleInput.value = week.title || '';
+
+    startDateInput.value = week.startDate || week.start_date || '';
+
+    descriptionInput.value = week.description || '';
+
+    linksInput.value = (Array.isArray(week.links) ? week.links : (typeof week.links === 'string' ? JSON.parseSafe(week.links) || [] : [])).join('\n');
+
+    document.querySelector('#add-week').textContent = 'Update Week';
+
+  }
+
+}
+
+// helper parse safe
+
+JSON.parseSafe = function (s) {
+
+  try { return JSON.parse(s); } catch { return null; }
+
+};
+
 async function loadAndInitialize() {
-  // ... your implementation here ...
+
+  try {
+
+    const res = await fetch(API_BASE);
+
+    if (!res.ok) throw new Error('Failed to load weeks');
+
+    const payload = await res.json();
+
+    weeks = Array.isArray(payload) ? payload : (payload.data || []);
+
+    // normalize week id fields
+
+    weeks.forEach(w => { if (!w.id && w.week_id) w.id = w.week_id; });
+
+    renderTable();
+
+  } catch (err) {
+
+    weeksTbody.innerHTML = `<tr><td colspan="4" class="text-danger">Error loading weeks: ${escapeHtml(err.message)}</td></tr>`;
+
+    console.error(err);
+
+  }
+
+  weekForm.addEventListener('submit', handleAddWeek);
+
+  weeksTbody.addEventListener('click', handleTableClick);
+
+  resetBtn.addEventListener('click', resetForm);
+
 }
 
-// --- Initial Page Load ---
-// Call the main async function to start the application.
+// init
+
 loadAndInitialize();
+ 

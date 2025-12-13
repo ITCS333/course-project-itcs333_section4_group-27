@@ -1,44 +1,29 @@
-<!--
-  Requirement: Create the Student View for the Weekly Breakdown
-
-  Instructions:
-  This page is a read-only view for students to see the plan for all weeks.
-  Each week should link to its dedicated detail page.
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- TODO: Add meta tags for charset and viewport. -->
-    
-    <!-- TODO: Add a title, e.g., "Weekly Course Breakdown". -->
-
-    <!-- TODO: Link to your CSS framework or stylesheet. -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Weekly Course Breakdown</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-
-    <!-- TODO: Create a 'header' with a main heading ('h1') "Weekly Course Breakdown". -->
-
-    <!-- TODO: Create the 'main' content area. -->
-        <!-- TODO: Create a 'section' to contain the list of weeks. -->
-            <!-- TODO: Add 2-3 dummy weekly entries using the structure below. -->
-
-            <!-- Example Week 1: -->
-            <!-- TODO: Use an 'article' element for each week to group its content semantically. -->
-                <!-- TODO: Add a heading ('h2') for the week's title (e.g., "Week 1: Introduction to HTML"). -->
-                <!-- TODO: Add a paragraph ('p') to display the start date, e.g., "Starts on: YYYY-MM-DD". -->
-                <!-- TODO: Add a paragraph ('p') for a brief description of the week. -->
-                <!-- TODO: Add an anchor tag ('a') that links to the detail page. 
-                     - For now, the 'href' can be "week-detail.html".
-                     - The link text should be "View Details & Discussion". -->
-            <!-- End of article. -->
-
-            <!-- Example Week 2: -->
-            <!-- TODO: Create a second 'article' for another week. -->
-                <!-- TODO: Add a heading, a paragraph for the start date, a paragraph for the description, and an anchor tag linking to "week-detail.html". -->
-            <!-- End of article. -->
-
-        <!-- End of weekly list section. -->
-    <!-- End of main. -->
-
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+<div class="container">
+<a class="navbar-brand" href="#">ITCS333</a>
+<div class="ms-auto">
+<a class="btn btn-outline-primary me-2" href="admin.html">Admin</a>
+</div>
+</div>
+</nav>
+<main class="container">
+<header class="mb-4">
+<h1 class="h3">Weekly Course Breakdown</h1>
+<p class="text-muted">Click a week to view details and discussion.</p>
+</header>
+<section id="week-list-section" class="row g-3">
+<!-- JS will populate articles here -->
+</section>
+</main>
+<script src="list.js" defer></script>
 </body>
 </html>

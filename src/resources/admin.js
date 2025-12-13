@@ -1,96 +1,150 @@
 /*
-  Requirement: Make the "Manage Resources" page interactive.
-
-  Instructions:
-  1. Link this file to `admin.html` using:
-     <script src="admin.js" defer></script>
-  
-  2. In `admin.html`, add an `id="resources-tbody"` to the <tbody> element
-     inside your `resources-table`.
-  
-  3. Implement the TODOs below.
+  Interactive Manage Resources Page
 */
 
-// --- Global Data Store ---
-// This will hold the resources loaded from the JSON file.
-let resources = [];
+let resources = []; 
+let editingResourceId = null; 
 
-// --- Element Selections ---
-// TODO: Select the resource form ('#resource-form').
+const resourceForm = document.querySelector('#resource-form');
+const resourcesTableBody = document.querySelector('#resources-tbody');
+const titleInput = document.querySelector('#resource-title');
+const descriptionInput = document.querySelector('#resource-description');
+const linkInput = document.querySelector('#resource-link');
 
-// TODO: Select the resources table body ('#resources-tbody').
 
-// --- Functions ---
-
-/**
- * TODO: Implement the createResourceRow function.
- * It takes one resource object {id, title, description}.
- * It should return a <tr> element with the following <td>s:
- * 1. A <td> for the `title`.
- * 2. A <td> for the `description`.
- * 3. A <td> containing two buttons:
- * - An "Edit" button with class "edit-btn" and `data-id="${id}"`.
- * - A "Delete" button with class "delete-btn" and `data-id="${id}"`.
- */
 function createResourceRow(resource) {
-  // ... your implementation here ...
+  const tr = document.createElement('tr');
+
+  const titleTd = document.createElement('td');
+  titleTd.textContent = resource.title;
+
+  const descriptionTd = document.createElement('td');
+  descriptionTd.textContent = resource.description;
+
+  const actionsTd = document.createElement('td');
+
+  const editBtn = document.createElement('button');
+  editBtn.textContent = 'Edit';
+  editBtn.classList.add('edit-btn');
+  editBtn.dataset.id = resource.id;
+
+  const deleteBtn = document.createElement('button');
+  deleteBtn.textContent = 'Delete';
+  deleteBtn.classList.add('delete-btn');
+  deleteBtn.dataset.id = resource.id;
+
+  actionsTd.appendChild(editBtn);
+  actionsTd.appendChild(deleteBtn);
+
+  tr.appendChild(titleTd);
+  tr.appendChild(descriptionTd);
+  tr.appendChild(actionsTd);
+
+  return tr;
 }
 
-/**
- * TODO: Implement the renderTable function.
- * It should:
- * 1. Clear the `resourcesTableBody`.
- * 2. Loop through the global `resources` array.
- * 3. For each resource, call `createResourceRow()`, and
- * append the resulting <tr> to `resourcesTableBody`.
- */
+
 function renderTable() {
-  // ... your implementation here ...
+  resourcesTableBody.innerHTML = '';
+  resources.forEach(resource => {
+    const tr = createResourceRow(resource);
+    resourcesTableBody.appendChild(tr);
+  });
 }
 
-/**
- * TODO: Implement the handleAddResource function.
- * This is the event handler for the form's 'submit' event.
- * It should:
- * 1. Prevent the form's default submission.
- * 2. Get the values from the title, description, and link inputs.
- * 3. Create a new resource object with a unique ID (e.g., `id: \`res_${Date.now()}\``).
- * 4. Add this new resource object to the global `resources` array (in-memory only).
- * 5. Call `renderTable()` to refresh the list.
- * 6. Reset the form.
- */
+
 function handleAddResource(event) {
-  // ... your implementation here ...
+  event.preventDefault();
+
+  const title = titleInput.value.trim();
+  const description = descriptionInput.value.trim();
+  const link = linkInput.value.trim();
+
+  if (!title || !description || !link) return;
+
+  if (editingResourceId) {
+   
+    const resource = resources.find(r => r.id === editingResourceId);
+    resource.title = title;
+    resource.description = description;
+    resource.link = link;
+
+    editingResourceId = null; 
+  } else {
+  
+    const newResource = {
+      id: `res_${Date.now()}`,
+      title,
+      description,
+      link
+    };
+    resources.push(newResource);
+  }
+
+  renderTable();
+  resourceForm.reset();
 }
 
-/**
- * TODO: Implement the handleTableClick function.
- * This is an event listener on the `resourcesTableBody` (for delegation).
- * It should:
- * 1. Check if the clicked element (`event.target`) has the class "delete-btn".
- * 2. If it does, get the `data-id` attribute from the button.
- * 3. Update the global `resources` array by filtering out the resource
- * with the matching ID (in-memory only).
- * 4. Call `renderTable()` to refresh the list.
- */
+
 function handleTableClick(event) {
-  // ... your implementation here ...
+  const target = event.target;
+
+  if (target.classList.contains('delete-btn')) {
+    const id = target.dataset.id;
+    resources = resources.filter(r => r.id !== id);
+    renderTable();
+  }
+
+  if (target.classList.contains('edit-btn')) {
+    const id = target.dataset.id;
+    const resource = resources.find(r => r.id === id);
+
+    titleInput.value = resource.title;
+    descriptionInput.value = resource.description;
+    linkInput.value = resource.link;
+
+    editingResourceId = id;
+  }
 }
 
-/**
- * TODO: Implement the loadAndInitialize function.
- * This function needs to be 'async'.
- * It should:
- * 1. Use `fetch()` to get data from 'resources.json'.
- * 2. Parse the JSON response and store the result in the global `resources` array.
- * 3. Call `renderTable()` to populate the table for the first time.
- * 4. Add the 'submit' event listener to `resourceForm` (calls `handleAddResource`).
- * 5. Add the 'click' event listener to `resourcesTableBody` (calls `handleTableClick`).
- */
+
 async function loadAndInitialize() {
-  // ... your implementation here ...
+  try {
+    
+    resources = [
+      {
+        id: "res_1",
+        title: "Chapter 1 Notes",
+        description: "A comprehensive summary of the first chapter, covering all key concepts.",
+        link: "https://example.com/notes/chapter1.pdf"
+      },
+      {
+        id: "res_2",
+        title: "Interactive Git Tutorial",
+        description: "An external website that lets you practice Git commands in your browser.",
+        link: "https://learngitbranching.js.org/"
+      },
+      {
+        id: "res_3",
+        title: "CSS Flexbox Guide",
+        description: "A complete visual guide to CSS Flexbox, with examples.",
+        link: "https://css-tricks.com/snippets/css/a-guide-to-flexbox/"
+      }
+    ];
+
+    renderTable();
+
+    resourceForm.addEventListener('submit', handleAddResource);
+    resourcesTableBody.addEventListener('click', handleTableClick);
+
+  } catch (error) {
+    console.error('Error initializing resources:', error);
+  }
 }
 
-// --- Initial Page Load ---
-// Call the main async function to start the application.
+ const response = await fetch('resources/api/resources.json');
+     resources = await response.json();
+
+    
+
 loadAndInitialize();
