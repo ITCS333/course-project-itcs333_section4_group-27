@@ -137,14 +137,12 @@ async function loadAndInitialize() {
     resourceForm.addEventListener('submit', handleAddResource);
     resourcesTableBody.addEventListener('click', handleTableClick);
 
-  } catch (error) {
+   } catch (error) {
     console.error('Error initializing resources:', error);
   }
 }
 
- const response = await fetch('resources/api/resources.json');
-     resources = await response.json();
+loadAndInitialize();
 
     
 
-loadAndInitialize();
